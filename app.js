@@ -18,9 +18,16 @@ app.use(bodyParser.urlencoded({
 }));
 app.use(express.static("public"));
 
+app.listen(PORT, function() {
+  console.log(`Server started on port ${PORT}`);
+});
+
+let posts = [];
+
 app.get("/", function(req, res) {
   res.render("home", {
-    homeContent: homeStartingContent
+    homeContent: homeStartingContent,
+    posts: posts
   });
 });
 
@@ -41,9 +48,19 @@ app.get("/compose", function(req, res) {
 });
 
 app.post("/compose", function(req, res) {
-  console.log(req.body.postTitle);
+  const post = {
+    title: req.body.postTitle,
+    content: req.body.postContent
+  };
+  posts.push(post);
+  res.redirect("/");
 });
 
-app.listen(PORT, function() {
-  console.log(`Server started on port ${PORT}`);
+app.get("/posts/:postTitle", function(req, res) {
+  const paramTitle = req.params.postTitle;
+  posts.forEach(function(post) {
+    if (paramTitle === post.title) {
+      console.log("Match found!!");
+    } else console.log("Not a match");
+  });
 });
