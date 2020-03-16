@@ -1,0 +1,21 @@
+<%- include("partials/header") -%>
+
+<form class="" action="/" method="post">
+  <button class="btn btn-primary" type="submit" name="homeCompose">Compose</button>
+  <input type="hidden" name="journalTitle" value="<%= journalTitle %>"></input>
+  <h1><%= journalTitle %></h1>
+</form>
+<p><%= startingContent %></p>
+
+<%  posts.forEach(function(post){ %>
+
+<h2><%=post.title%></h2>
+<p>
+  <%=post.content.substring(0, 100) + " ..."%>
+  <a href="/posts/<%=post._id%>">Read More</a>
+</p>
+
+
+<% }) %>
+
+<% -include("partials/footer") -%>
