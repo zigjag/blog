@@ -1,9 +1,10 @@
 <%- include("partials/header"); -%>
 
-<a class="btn btn-primary" href="/compose">Compose</a>
+<input type="hidden" name="hiddenTitle" value="Daily">
+<a class="btn btn-primary" href="/compose?title=Daily">Compose</a>
+
 <h1><%= journalTitle %></h1>
 <p> <%= startingContent %> </p>
-
 
 <%  posts.forEach(function(post){ %>
 

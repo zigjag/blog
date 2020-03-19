@@ -1,7 +1,7 @@
 <%- include("partials/header") -%>
 
-<a class="btn btn-primary" href="/compose">Compose</a>
-<h1><%= journalTitle %></h1>
+<a class="btn btn-primary" href="/compose?title=<%= journalTitle %>">Compose</a>
+<h1><%= headerTitle %></h1>
 <p><%= startingContent %></p>
 
 <%  posts.forEach(function(post){ %>
@@ -9,7 +9,7 @@
 <h2><%=post.title%></h2>
 <p>
   <%=post.content.substring(0, 100) + " ..."%>
-  <a href="/posts/<%=post._id%>">Read More</a>
+  <a href="/<%= journalTitle %>/<%=post._id%>">Read More</a>
 </p>
 
 
