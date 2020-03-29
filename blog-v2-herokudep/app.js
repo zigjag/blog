@@ -5,6 +5,7 @@ const bodyParser = require("body-parser");
 const ejs = require("ejs");
 const _ = require("lodash");
 const mongoose = require("mongoose");
+const md5 = require("md5");
 
 const homeStartingContent = "Welcome to my blog! My name is Joseph Kligel, and I will be your host. This is a website I created completely from scratch. Everything from the server to the website design and more has been implemented by yours truly.";
 const aboutContent = "This is a blog site where I share my ideas and thoughts with others. These thoughts span from menial daily entries to significant endeavors such as reporting programming progress.";
@@ -29,8 +30,12 @@ const postSchema = {
   title: String,
   content: String
 };
-
+const userSchema = {
+  email: String,
+  password: String
+};
 const Post = mongoose.model("Post", postSchema);
+const User = mongoose.model("User", userSchema);
 
 // --------------Gets Section--------------
 
@@ -41,7 +46,7 @@ app.get("/", function(req, res) {
       res.render("home", {
         journalTitle: "Home",
         startingContent: homeStartingContent,
-        posts: posts,
+        posts: posts
       });
     }
   });
@@ -65,6 +70,32 @@ app.get("/compose", function(req, res) {
     journalTitle: hiddenTitle
   });
 });
+
+app.route("/login")
+  .get((req, res) => {
+    res.render("login", {
+      hiddenTitle: req.query.title
+    });
+  })
+  .post((req, res) => {
+    const username = req.body.username;
+    const password = md5(req.body.password);
+
+    User.findOne({email: username}, (err, foundUser)=>{
+      if(err) console.log(err);
+      else {
+        if(foundUser){
+          if(foundUser.password === password) {
+            res.render("compose", {
+              journalTitle: req.body.hiddenTitle//fix
+            });
+          } else {
+            res.sendFile(__dirname+"/public/error/noaccess.html");
+          }
+        } else res.sendFile(__dirname+"/public/error/noaccess.html");
+      }
+    });
+  });
 
 // --------------Posts Section--------------
 
@@ -142,9 +173,9 @@ app.get("/:journal", function(req, res) {
         if (err) console.log(err);
         else {
           res.render("journal", {
-            journalTitle:  requestedTitle,
+            journalTitle: requestedTitle,
             headerTitle: header(requestedTitle),
-            startingContent: "This is the " + requestedTitle.slice(0,-5) + " progess log",
+            startingContent: "This is the " + requestedTitle.slice(0, -5) + " progess log",
             posts: foundPosts
           });
         }
@@ -185,11 +216,11 @@ app.listen(PORT, function() {
 
 // ---------------Miscallaneous Section --------------
 
-function header(string){
+function header(string) {
   var header = string.slice(0, -5);
-  if(header === "Py"){
+  if (header === "Py") {
     header = "Python Programming";
-  } else if(header === "Wd") {
+  } else if (header === "Wd") {
     header = "Web Development (HTML, CSS, JS, NodeJS)";
   } else {
     header = header + " Programming";
