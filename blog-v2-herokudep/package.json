@@ -16,5 +16,8 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Joseph Kligel",
-  "license": "ISC"
+  "license": "ISC",
+	"engines" : {
+	"node": v12.16.1
+	}
 }
